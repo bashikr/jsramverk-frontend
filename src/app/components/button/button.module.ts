@@ -6,7 +6,7 @@ import { AppRoutingModule } from '../../app-routing.module';
 
 @NgModule({
   declarations: [ButtonComponent],
-  imports: [ BrowserModule, CommonModule, AppRoutingModule],
+  imports: [BrowserModule, CommonModule, AppRoutingModule],
   exports: [ButtonComponent],
 })
 export class ButtonModule {}
