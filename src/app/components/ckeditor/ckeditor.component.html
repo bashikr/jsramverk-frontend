@@ -1,0 +1,10 @@
+<h1 class="text-center mb-5">Welcome to CKEditor!</h1>
+
+<div class="row">
+    <div class="col text-center mb-5">
+        <app-button backgroundColor='blue' color='white' text='Save' (btnClick)="saveData()">Save</app-button>
+    </div>
+</div>
+
+<ckeditor [editor]="Editor" data="Hello World!" (ready)="onReady($event)">
+</ckeditor>
