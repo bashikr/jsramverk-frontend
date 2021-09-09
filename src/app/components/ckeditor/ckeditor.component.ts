@@ -6,7 +6,6 @@ import * as DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
   templateUrl: './ckeditor.component.html',
   styleUrls: ['./ckeditor.component.css'],
 })
-
 export class CKEditorComponent {
   @Input() data1: any;
   @Input() Editor = DecoupledEditor;
