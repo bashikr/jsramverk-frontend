@@ -1,4 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { SharedService } from '../../shared.service';
+import { Subscription } from 'rxjs';
+import { Component } from '@angular/core';
 import * as DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 
 @Component({
@@ -7,8 +9,17 @@ import * as DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
   styleUrls: ['./ckeditor.component.css'],
 })
 export class CKEditorComponent {
-  @Input() data1: any;
-  @Input() Editor = DecoupledEditor;
+  clickEventSubscription: Subscription;
+  data: any = 'Nothing yet!';
+  public Editor = DecoupledEditor;
+
+  constructor(private sharedService: SharedService) {
+    this.clickEventSubscription = this.sharedService
+      .getClickEvent()
+      .subscribe(() => {
+        this.sendDataToLocalStorage();
+      });
+  }
 
   public onReady(editor: any) {
     editor.ui
@@ -17,12 +28,12 @@ export class CKEditorComponent {
         editor.ui.view.toolbar.element,
         editor.ui.getEditableElement()
       );
-
-    this.data1 = editor;
+    this.data = editor;
   }
 
-  public saveData() {
-    localStorage.setItem('test', this.data1.getData());
-    console.log(this.data1.getData());
+  sendDataToLocalStorage() {
+    localStorage.setItem('test', this.data.getData());
+    console.log(this.data.getData());
+    console.log(this.sharedService.getTitleValue());
   }
 }

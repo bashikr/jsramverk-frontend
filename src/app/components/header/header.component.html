@@ -1,0 +1,17 @@
+<nav class="navbar navbar-default">
+  <div class="header-container mb-5">
+    <div class="toolbar">
+      <div class="fa-3x m-3">
+        <fa-icon alt="Magic Editor" class="logo" width="40" [icon]="faFileAlt">FileAlt</fa-icon>
+      </div>
+      <h2 width="40" class="mr-5 font-weight-bold">Magic Editor</h2>
+      <div class="btn-header">
+        <app-button backgroundColor='#43A9FF' color='white' text='Save'
+          (btnClick)="saveDataOnClick(titleInputRef.value)">Save</app-button>
+      </div>
+      <div name='title' class="input-header">
+        <input type="text" placeholder="Enter a title" #titleInputRef>
+      </div>
+    </div>
+  </div>
+</nav>

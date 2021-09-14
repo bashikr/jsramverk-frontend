@@ -1,3 +1,6 @@
 .btn {
-  background-color: red;
+  border-radius: 5%;
+  border: none;
+  padding:10px 15px;
+  font-weight: 700;
 }

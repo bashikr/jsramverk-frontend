@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "deploy": "ng build --prod --base-href './' && rsync -av --delete dist/ baaa19@ssh.student.bth.se:www/editor-angular"
+    "deploy": "ng build --prod --base-href './' && rsync -av --delete build baaa19@ssh.student.bth.se:www/editor-angular"
   },
   "private": true,
   "dependencies": {
@@ -23,34 +23,37 @@
     "@angular/router": "~12.2.0",
     "@ckeditor/ckeditor5-angular": "^2.0.2",
     "@ckeditor/ckeditor5-build-decoupled-document": "^29.2.0",
+    "@fortawesome/angular-fontawesome": "0.9.0",
+    "@fortawesome/fontawesome-svg-core": "^1.2.36",
+    "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@ng-bootstrap/ng-bootstrap": "^10.0.0",
     "bootstrap": "^4.5.0",
+    "firebase": "^9.0.0",
+    "rxfire": "^6.0.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.11.4",
-    "firebase": "^9.0.0",
-    "rxfire": "^6.0.0"
+    "zone.js": "~0.11.4"
   },
   "devDependencies": {
+    "@angular-devkit/architect": "^0.1200.0",
     "@angular-devkit/build-angular": "^12.2.4",
     "@angular/cli": "~12.2.3",
     "@angular/compiler-cli": "~12.2.0",
     "@types/ckeditor__ckeditor5-build-decoupled-document": "^29.1.1",
     "@types/jasmine": "~3.8.0",
     "@types/node": "^12.11.1",
+    "firebase-tools": "^9.0.0",
+    "fuzzy": "^0.1.3",
+    "inquirer": "^6.2.2",
+    "inquirer-autocomplete-prompt": "^1.0.1",
     "jasmine-core": "~3.8.0",
+    "jsonc-parser": "^3.0.0",
     "karma": "~6.3.0",
     "karma-chrome-launcher": "~3.1.0",
     "karma-coverage": "~2.0.3",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
-    "typescript": "~4.3.5",
-    "@angular-devkit/architect": "^0.1200.0",
-    "firebase-tools": "^9.0.0",
-    "fuzzy": "^0.1.3",
-    "inquirer": "^6.2.2",
-    "inquirer-autocomplete-prompt": "^1.0.1",
     "open": "^7.0.3",
-    "jsonc-parser": "^3.0.0"
+    "typescript": "~4.3.5"
   }
 }
