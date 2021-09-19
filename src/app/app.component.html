@@ -1,10 +1,14 @@
 <title>{{title}}</title>
 
 <app-header></app-header>
-
-<div class="content text-center" style="background-color: #F8F9FA;">
-  <div class="container">
-    <app-ckeditor></app-ckeditor>
+<div class="container-fluid">
+  <div class="row" style="background-color: #F8F9FA;">
+    <div class="col-2">
+      <app-documents-list></app-documents-list>
+    </div>
+    <div class="container col-7 float-right editor-responsive">
+      <app-ckeditor></app-ckeditor>
+    </div>
   </div>
 </div>
 

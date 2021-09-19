@@ -1,0 +1,27 @@
+.editor-responsive {
+  margin-right: 20%;
+}
+
+@media only screen and (max-width: 1300px) {
+  .editor-responsive {
+    margin-right: 15%;
+  }
+}
+
+@media only screen and (max-width: 1000px) {
+  .editor-responsive {
+    margin-right: 10%;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .editor-responsive {
+    margin-right: 5%;
+  }
+}
+
+@media only screen and (max-width: 650px) {
+  .editor-responsive {
+    margin-right: 2%;
+  }
+}

@@ -1,6 +1,6 @@
-# EditorAngular
+# Magic Editor
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.3.
+This project is a part of the course Jsramverk (DV1612 H21) at Blekinge Institute of Technology. It was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.3.
 
 ## Development server
 

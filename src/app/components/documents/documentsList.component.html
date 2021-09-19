@@ -1,0 +1,15 @@
+<ul class="float-left" *ngFor="let document of documents;let i=index;">
+  <div class="jumbotron text-left pt-2 pl-3 border border-info">
+    <h4>Document {{i + 1}}</h4>
+    <p>Title: {{document.title}}</p>
+    <p>Creation date: {{document.creationDate}}</p>
+    <div>
+      <span id='trash-span-fontawesome' (click)="deleteDocument(document._id)" class="fa-2x float-left">
+        <fa-icon alt="trash icon" [icon]="faTrashAlt">TrashAlt</fa-icon>
+      </span>
+      <span id='edit-span-fontawesome' (click)="updateDocument(document._id)" class="fa-2x float-right">
+        <fa-icon alt="edit icon" [icon]="faEdit">Edit</fa-icon>
+      </span>
+    </div>
+  </div>
+</ul>

@@ -1,3 +1,4 @@
+import { DocumentsComponent } from './components/documents/documentsList.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -14,16 +15,14 @@ import { AppComponent } from './app.component';
 import { LogService } from './components/log/log.service';
 import { LogTestComponent } from './components/log/log.component';
 import { DocEditorModule } from './components/ckeditor/ckeditor.module';
-import { DocumentCreateComponent } from './components/documents/document-create/document-create.component';
-import { DocumentsDisplayComponent } from './components/documents/documents-display/documents-display.component';
+
 @NgModule({
   declarations: [
     AppComponent,
     LogTestComponent,
-    DocumentCreateComponent,
-    DocumentsDisplayComponent,
     HeaderComponent,
     ButtonComponent,
+    DocumentsComponent,
   ],
   imports: [
     BrowserModule,
@@ -34,11 +33,7 @@ import { DocumentsDisplayComponent } from './components/documents/documents-disp
     CommonModule,
     HttpClientModule,
     FontAwesomeModule,
-    RouterModule.forRoot([
-      { path: 'documents', component: DocumentsDisplayComponent },
-      { path: 'hello', component: DocumentsDisplayComponent },
-      { path: 'hello/:msg', component: DocumentsDisplayComponent },
-    ]),
+    RouterModule.forRoot([]),
   ],
   providers: [LogService],
   bootstrap: [AppComponent],

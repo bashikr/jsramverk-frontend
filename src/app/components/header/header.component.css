@@ -59,24 +59,88 @@ footer a {
 }
 
 .logo {
+  padding-left: 10px;
   filter: invert(0.5) sepia(1) saturate(5) hue-rotate(175deg);
 }
 
 .btn-header {
-  position: absolute;
-  right: inherit;
   float: right;
-  margin-right: 10px;
+  width: 300px;
 }
 
 .input-header {
+  margin-right: 1px;
+  position: relative;
+  float:right;
+}
+
+.required-input-container{
   position: absolute;
   right: inherit;
-  float: right;
-  border-radius: 5%;
-  margin-right: 5%;
+  margin-right: 230px;
+  width: 300px;
 }
+
 
 .input-header input {
   padding: 10px 15px;
+}
+
+.form-header {
+  position:absolute;
+  right: inherit;
+  float: right;
+  margin-right: 5px;
+}
+
+.btn-header-save {
+  position: relative;
+  right: inherit;
+  float: right;
+  border-radius: 5%;
+  margin-right: 150px;
+}
+
+.btn-header-update {
+  position: relative;
+  right: inherit;
+  float: right;
+  border-radius: 5%;
+  margin-right: 135px;
+}
+
+html, body {
+  height:100%;
+  width:100%;
+  margin:0;
+  padding:0;
+}
+
+.hideMe {
+  -moz-animation: cssAnimation 0s ease-in 3s forwards;
+  /* Firefox */
+  -webkit-animation: cssAnimation 0s ease-in 3s forwards;
+  /* Safari and Chrome */
+  -o-animation: cssAnimation 0s ease-in 3s forwards;
+  /* Opera */
+  animation: cssAnimation 0s ease-in 3s forwards;
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+}
+@keyframes cssAnimation {
+  0%   {opacity: 1;}
+  90%  {opacity: 1;}
+  100% {opacity: 0;}
+}
+@-webkit-keyframes cssAnimation {
+  0%   {opacity: 1;}
+  90%  {opacity: 1;}
+  100% {opacity: 0;}
+}
+
+
+@media only screen and (max-width: 950px) {
+  .title {
+    display: none;
+  }
 }
