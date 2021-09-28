@@ -1,4 +1,4 @@
-<div class="border" style="background-color: white;">
-  <ckeditor [(ngModel)]="model.content" (change)='onChange($event)' [editor]="Editor" (ready)="onReady($event)">
+<div class="border">
+  <ckeditor id='myEditor' #myEditor [(ngModel)]="model.content" (change)='onChange($event)' [editor]="Editor" (ready)="onReady($event)">
   </ckeditor>
 </div>

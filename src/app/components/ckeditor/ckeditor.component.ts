@@ -1,8 +1,9 @@
-import { InternalConnectionService } from '../services/internalConnection.service';
-import { DocumentsAPIService } from '../services/documents.api.service';
-import { Component } from '@angular/core';
+import { DataService } from '../../services/data.service';
+import { DocumentsAPIService } from '../../services/documents.api.service';
+import { Component, ViewChild } from '@angular/core';
 import * as DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 import { ChangeEvent } from '@ckeditor/ckeditor5-angular';
+import { BtnClicksService } from 'src/app/services/btnClicks.service';
 @Component({
   selector: 'app-ckeditor',
   templateUrl: './ckeditor.component.html',
@@ -10,11 +11,12 @@ import { ChangeEvent } from '@ckeditor/ckeditor5-angular';
 })
 export class CKEditorComponent {
   public Editor = DecoupledEditor;
-
   public model = {
     title: 'undefined',
     content: '<p>Hello, world!</p>',
   };
+
+  // @ViewChild('myEditor') myEditor: any;
 
   setValue(document: any) {
     this.model.content = document.content;
@@ -22,23 +24,34 @@ export class CKEditorComponent {
   }
 
   constructor(
-    private sharedService: InternalConnectionService,
-    private documentsAPI: DocumentsAPIService
+    private dataService: DataService,
+    private documentsAPI: DocumentsAPIService,
+    private btnClicksService: BtnClicksService
   ) {
-    this.sharedService.getClickEvent().subscribe(() => {
-      this.documentsAPI.setDocumentsRequest({
+    this.btnClicksService.saveBtnClick().subscribe(() => {
+      this.documentsAPI.createDocReq({
         title: this.model.title,
         content: this.model.content,
       });
       this.model.content = '<p>Hello, world!</p>';
     });
 
-    this.sharedService.getTitleValue().subscribe((title) => {
+    this.dataService.getTitle().subscribe((title) => {
       this.model.title = title;
     });
 
-    this.documentsAPI.getDocumentByIdResponse().subscribe((object) => {
-      this.setValue(object[0]);
+    this.documentsAPI.docByIdRes().subscribe((object) => {
+      this.setValue(object);
+    });
+
+    this.btnClicksService.updateBtnClick().subscribe(() => {
+      this.dataService.editorInitValue().subscribe((content) => {
+        this.model.content = content;
+      });
+    });
+
+    this.btnClicksService.deleteBtnClick().subscribe(() => {
+      this.model.content = '<p>Hello, world!</p>';
     });
   }
 
@@ -51,11 +64,18 @@ export class CKEditorComponent {
       );
   }
 
+//   public getArticleContent() {
+//     if (this.myEditor && this.myEditor.editorInstance) {
+//        return this.myEditor.editorInstance.getData();
+//     }
+
+//     return '';
+//  }
+
   public onChange({ editor }: ChangeEvent) {
     this.model.content = editor.getData();
-
-    this.sharedService.getClickEventUpdateButton().subscribe(() => {
-      this.sharedService.setUpdateContent(this.model.content);
+    this.btnClicksService.updateBtnClick().subscribe(() => {
+      this.dataService.updateContent(this.model.content);
     });
   }
 }

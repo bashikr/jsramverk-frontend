@@ -27,11 +27,11 @@ import { DocEditorModule } from './components/ckeditor/ckeditor.module';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     NgbModule,
     DocEditorModule,
     FormsModule,
     CommonModule,
-    HttpClientModule,
     FontAwesomeModule,
     RouterModule.forRoot([]),
   ],

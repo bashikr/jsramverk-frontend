@@ -1,3 +1,16 @@
 :host ::ng-deep .ck-editor__editable_inline {
-  min-height: 720px;
+  min-height: 650px;
+}
+
+.border {
+  border-radius: 10px;
+  background-color: hsla( 0,0%,0%,.1 );
+}
+
+:host ::ng-deep .ck-editor__editable {
+  width: 90%;
+  margin: 20px auto;
+  background-color: white;
+  border-radius: 2%;
+  border: none;
 }

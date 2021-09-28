@@ -1,5 +1,5 @@
 <ul class="float-left" *ngFor="let document of documents;let i=index;">
-  <div class="jumbotron text-left pt-2 pl-3 border border-info">
+  <div class="jumbotron text-left pt-2 pl-3 border border-info" *ngIf='visibleDocs === true'>
     <h4>Document {{i + 1}}</h4>
     <p>Title: {{document.title}}</p>
     <p>Creation date: {{document.creationDate}}</p>

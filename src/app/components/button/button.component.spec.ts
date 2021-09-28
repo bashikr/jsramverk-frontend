@@ -21,4 +21,29 @@ describe('ButtonComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should click', () => {
+    spyOn(component, 'onClick');
+
+    let button = fixture.debugElement.nativeElement.querySelector('button');
+    button.click();
+    expect(component.onClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('should trigger eventEmitter btnClick', () => {
+    spyOn(component.btnClick, 'emit');
+
+    let button = fixture.debugElement.nativeElement.querySelector('button');
+    // button.dispatchEvent(new Event('click'));
+    button.click()
+
+    expect(component.btnClick.emit).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call onClick function', () => {
+    spyOn(component, 'onClick');
+    component.onClick();
+
+    expect(component.onClick).toHaveBeenCalledTimes(1);
+  });
 });
