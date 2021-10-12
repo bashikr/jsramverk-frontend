@@ -1,3 +1,4 @@
+import { UpdateDoc } from './../components/documents/docs.interface';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
@@ -5,35 +6,18 @@ import { Subject } from 'rxjs';
   providedIn: 'root',
 })
 export class DataService {
-  private titleSubject = new Subject<any>();
-  private contentSubject = new Subject<any>();
-  private editorSubject = new Subject<any>();
+  private docSubject = new Subject<UpdateDoc>();
 
-  initEditor(str:string) {
-    this.editorSubject.next(str);
+  updateDocument(docObj: UpdateDoc) {
+    this.docSubject.next({
+      _id: docObj._id,
+      title: docObj.title,
+      content: docObj.content,
+      updateDate: new Date(),
+    });
   }
 
-  editorInitValue() {
-    return this.editorSubject.asObservable();
-  }
-
-
-
-  updateContent(content:string) {
-    this.contentSubject.next(content);
-  }
-
-  updatedContent() {
-    return this.contentSubject.asObservable();
-  }
-
-
-
-  sendTitle(title: string) {
-    this.titleSubject.next(title);
-  }
-
-  getTitle() {
-    return this.titleSubject.asObservable();
+  updatedDocument() {
+    return this.docSubject.asObservable();
   }
 }

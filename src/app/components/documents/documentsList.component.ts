@@ -3,7 +3,8 @@ import { DocumentsAPIService } from '../../services/documents.api.service';
 import { faTrashAlt, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { DisplayDoc } from './docs.interface';
 import { BtnClicksService } from 'src/app/services/btnClicks.service';
-DocumentsAPIService;
+import { SocketIoService } from 'src/app/services/socket.io.service';
+
 @Component({
   selector: 'app-documents-list',
   templateUrl: './documentsList.component.html',
@@ -18,11 +19,11 @@ export class DocumentsComponent {
 
   constructor(
     private documentsAPI: DocumentsAPIService,
-    private btnClicksService: BtnClicksService
+    private btnClicksService: BtnClicksService,
+    private socketIoService: SocketIoService
   ) {
     this.documentsAPI.docsRes().subscribe((documents) => {
       this.documents = documents;
-      return this.documents;
     });
     this.btnClicksService.docsBtnClick().subscribe((bool) => {
       this.visibleDocs = bool;
@@ -37,10 +38,12 @@ export class DocumentsComponent {
     this.documents?.forEach((document, index) => {
       if (document._id === id) this.documents?.splice(index, 1);
     });
-    this.btnClicksService.clickDeleteBtn()
+    this.btnClicksService.clickDeleteBtn();
   }
 
   public updateDocument(id: string) {
+    this.socketIoService.emit('openDoc', id);
+
     this.btnClicksService.tglUpdateBtn(false);
     return this.documentsAPI.docByIdReq(id);
   }

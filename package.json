@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "test:headless": "ng test --watch=false --browsers=ChromeHeadless",
-    "deploy": "ng build --base-href './' && rsync -av --delete -e 'ssh -i $HOME/.ssh/dbwebb.pub' dist/editor-angular/ baaa19@ssh.student.bth.se:www/editor-angular"
+    "deploy": "ng build --base-href './' && rsync -av --delete -e \"ssh -i $HOME/.ssh/dbwebb.pub\" dist/ baaa19@ssh.student.bth.se:www/editor-angular"
   },
   "private": true,
   "dependencies": {
@@ -32,6 +32,7 @@
     "firebase": "^9.1.0",
     "karma-coverage-istanbul-reporter": "^3.0.3",
     "karma-firefox-launcher": "^2.1.1",
+    "ngx-socket-io": "^4.1.0",
     "rxfire": "^6.0.2",
     "rxjs": "~6.6.0",
     "tslib": "^2.3.0",

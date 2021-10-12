@@ -4,9 +4,18 @@ import { DocumentsAPIService } from './../../services/documents.api.service';
 import { BtnClicksService } from './../../services/btnClicks.service';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from './header.component';
-import { ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  tick,
+} from '@angular/core/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { By } from '@angular/platform-browser';
+import { SocketIoService } from 'src/app/services/socket.io.service';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+
+const config: SocketIoConfig = { url: 'http://localhost:1337', options: {} };
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -35,8 +44,8 @@ describe('HeaderComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [HeaderComponent],
-      imports: [HttpClientModule, FormsModule],
-      providers: [BtnClicksService],
+      imports: [HttpClientModule, FormsModule, SocketIoModule.forRoot(config)],
+      providers: [BtnClicksService, SocketIoService],
     }).compileComponents();
   });
 
@@ -97,10 +106,10 @@ describe('HeaderComponent', () => {
     expect(documentsAPIService.docsRes()).toEqual(documents);
   }));
 
-  it('form should be invalid when submitting with a  title input less than 3 characters long', async () => {
+  it('form should be invalid when submitting with a  title input less than 3 characters long', fakeAsync(() => {
     let saveSubmitMock = spyOn(component, 'onAddDocument').and.callThrough();
 
-    await fixture.whenStable();
+    fixture.whenStable();
     let form = fixture.debugElement.query(By.css('form'));
     titleInput = form.nativeElement.querySelector('#title-input');
     titleInput.value = 'ca';
@@ -112,19 +121,21 @@ describe('HeaderComponent', () => {
 
     expect(submitForm).toBeUndefined();
     expect(saveSubmitMock).toHaveBeenCalledTimes(1);
-  });
+  }));
 
-  it('form should save when submitting with a title input equal or longer than 3 characters', async () => {
+  it('form should save when submitting with a title input equal or longer than 3 characters', fakeAsync(() => {
     expect(component.isSave).toBe(true);
 
     let saveSubmitMock = spyOn(component, 'onAddDocument').and.callThrough();
-    let sendTitleService = spyOn(dataService, 'sendTitle').and.callThrough();
+    let updateDocument = spyOn(dataService, 'updateDocument').and.callThrough();
     let clickSaveBtnService = spyOn(
       btnClicksService,
       'clickSaveBtn'
     ).and.callThrough();
 
-    await fixture.whenStable();
+    tick(5000);
+
+    fixture.whenStable();
     let form = fixture.debugElement.query(By.css('form'));
     titleInput = form.nativeElement.querySelector('#title-input');
     titleInput.value = 'cat';
@@ -141,30 +152,25 @@ describe('HeaderComponent', () => {
 
     expect(clickSaveBtnService).toHaveBeenCalledTimes(1);
 
-    expect(sendTitleService).toHaveBeenCalledTimes(1);
-    expect(sendTitleService).toHaveBeenCalledWith('cat');
-  });
+    expect(updateDocument).toHaveBeenCalledTimes(1);
+  }));
 
   it('form should update when submitting with a title input equal or longer than 3 characters', async () => {
     component.isSave = false;
     expect(component.isSave).toBe(false);
 
     let updateSubmitMock = spyOn(component, 'onAddDocument').and.callThrough();
-    let sendTitleService = spyOn(dataService, 'sendTitle').and.callThrough();
-    let updateContentService = spyOn(
+    let updateDocService = spyOn(
       dataService,
-      'updatedContent'
+      'updateDocument'
     ).and.callThrough();
     let updateDocReqService = spyOn(
       documentsAPIService,
       'updateDocReq'
     ).and.callThrough();
-    let initEditorDataService = spyOn(
-      dataService,
-      'initEditor'
-    ).and.callThrough();
 
-    await fixture.whenStable();
+    fixture.whenStable();
+
     let form = fixture.debugElement.query(By.css('form'));
     titleInput = form.nativeElement.querySelector('#title-input');
     titleInput.value = 'dog';
@@ -180,12 +186,9 @@ describe('HeaderComponent', () => {
 
     expect(submitForm).toBeUndefined();
     expect(component.onAddDocument).toHaveBeenCalledTimes(1);
-    expect(sendTitleService).toHaveBeenCalledTimes(1);
-    expect(sendTitleService).toHaveBeenCalledWith('dog');
+    expect(updateDocService).toHaveBeenCalledTimes(1);
     expect(component.isSave).toEqual(true);
-    expect(updateContentService).toHaveBeenCalledTimes(1);
     expect(updateSubmitMock).toHaveBeenCalledTimes(1);
     expect(updateDocReqService).toHaveBeenCalledTimes(1);
-    expect(initEditorDataService).toHaveBeenCalledTimes(1);
   });
 });

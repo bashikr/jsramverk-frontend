@@ -5,6 +5,7 @@ import { Component } from '@angular/core';
 import { faFileAlt } from '@fortawesome/free-solid-svg-icons';
 import { NgForm } from '@angular/forms';
 import { BtnClicksService } from 'src/app/services/btnClicks.service';
+import { SocketIoService } from 'src/app/services/socket.io.service';
 
 @Component({
   selector: 'app-header',
@@ -27,7 +28,8 @@ export class HeaderComponent {
   constructor(
     private dataService: DataService,
     private documentsAPI: DocumentsAPIService,
-    private btnClicksService: BtnClicksService
+    private btnClicksService: BtnClicksService,
+    private socketIoService: SocketIoService
   ) {
     this.btnClicksService
       .updateBtnTglValue()
@@ -35,11 +37,15 @@ export class HeaderComponent {
     this.documentsAPI.docByIdRes().subscribe((document) => {
       this.document.title = document.title;
       this.document._id = document._id;
+      this.document.content = document.content;
     });
     this.btnClicksService.deleteBtnClick().subscribe(() => {
-      this.document.title  = ''
-      this.isSave = true
-   });
+      this.document.title = '';
+      this.isSave = true;
+    });
+    this.dataService.updatedDocument().subscribe((document) => {
+      this.document.content = document.content;
+    });
   }
 
   onAddDocument(form: NgForm) {
@@ -48,31 +54,38 @@ export class HeaderComponent {
     }
 
     if (this.isSave === true) {
-      this.dataService.sendTitle(form.value.title);
+      this.dataService.updateDocument({
+        _id: this.document._id,
+        title: form.value.title,
+        content: this.document.content,
+      });
       this.btnClicksService.clickSaveBtn();
       this.document.title = '';
     } else if (this.isSave === false) {
-      this.dataService.sendTitle(form.value.title);
-      this.dataService.updatedContent().subscribe((content) => {
-        this.document.content = content;
+      this.dataService.updateDocument({
+        _id: this.document._id,
+        content: this.document.content,
+        title: form.value.title,
       });
+
       this.isSave = true;
+      this.socketIoService.emit('closeDoc', this.document._id);
+
       this.btnClicksService.clickUpdateBtn();
       this.documentsAPI.updateDocReq(this.document);
       this.document.title = '';
-      this.dataService.initEditor('<p>Hello, world!</p>');
     }
   }
 
   fetchSavedDocuments() {
-    if(this.toggleDocuments == false) {
-      this.buttonName = 'Hide'
-      this.toggleDocuments = true
+    if (this.toggleDocuments == false) {
+      this.buttonName = 'Hide';
+      this.toggleDocuments = true;
+      this.documentsAPI.docsReq();
       this.btnClicksService.clickDocsBtn(true);
-      return this.documentsAPI.docsReq();
-    }else {
-      this.buttonName = 'Documents'
-      this.toggleDocuments = false
+    } else {
+      this.buttonName = 'Documents';
+      this.toggleDocuments = false;
       this.btnClicksService.clickDocsBtn(false);
     }
   }

@@ -16,6 +16,20 @@ import { LogService } from './components/log/log.service';
 import { LogTestComponent } from './components/log/log.component';
 import { DocEditorModule } from './components/ckeditor/ckeditor.module';
 
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { SocketIoService } from './services/socket.io.service';
+
+let baseURL: string = 'http://localhost:1337/';
+const LOCAL_DOMAINS: Array<string> = ['localhost', '127.0.0.1'];
+
+if (LOCAL_DOMAINS.includes(window.location.hostname)) {
+  baseURL = 'http://localhost:1337/';
+} else {
+  baseURL = 'https://jsramverk-angular-editor-baaa19.azurewebsites.net/';
+}
+
+const config: SocketIoConfig = { url: baseURL, options: {} };
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,8 +48,9 @@ import { DocEditorModule } from './components/ckeditor/ckeditor.module';
     CommonModule,
     FontAwesomeModule,
     RouterModule.forRoot([]),
+    SocketIoModule.forRoot(config),
   ],
-  providers: [LogService],
+  providers: [LogService, SocketIoService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -1,4 +1,5 @@
 <div class="border">
-  <ckeditor id='myEditor' #myEditor [(ngModel)]="model.content" (change)='onChange($event)' [editor]="Editor" (ready)="onReady($event)">
+  <ckeditor id='myEditor' (keyup)="onKeyUp($event)" [(ngModel)]="model.content"  [editor]="Editor"
+    (ready)="onReady($event)">
   </ckeditor>
 </div>
