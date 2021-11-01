@@ -1,45 +1,73 @@
-<nav class="navbar navbar-default">
-  <div class="header-container mb-5">
-    <div class="toolbar">
-      <div class="fa-3x m-3">
-        <a href="http://www.student.bth.se/~baaa19/editor-angular/">
-          <fa-icon alt="Magic Editor" class="logo" width="40" [icon]="faFileAlt">FileAlt</fa-icon>
-        </a>
+<mdb-navbar SideClass="navbar navbar-expand-lg py-2 navbar-dark #f5f5f5 grey lighten-4 text-dark"
+  [containerInside]="false">
+
+  <mdb-navbar-brand>
+    <div class="fa-3x">
+      <a href="http://www.student.bth.se/~baaa19/editor-angular/">
+        <fa-icon alt="Magic Editor" class="logo" width="40" [icon]="faFileAlt">FileAlt</fa-icon>
+      </a>
+    </div>
+  </mdb-navbar-brand>
+
+  <h4 width="40" class="mx-4 font-weight-bold title">Magic Editor</h4>
+
+  <links>
+    <div class="row ml-1 w-100 pt-2">
+      <div>
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active ">
+            <app-button id='documents-hide-button' [text]='buttonName' (btnClick)='fetchSavedDocuments()'></app-button>
+          </li>
+        </ul>
       </div>
-      <h2 width="40" class="mr-5 font-weight-bold title">Magic Editor</h2>
 
-      <form class="form-header" name='documentsForm' (ngSubmit)="onAddDocument(documentsForm)" #documentsForm="ngForm">
-        <div class="required-input-container">
-          <div class="input-header">
-            <input id='title-input' required minlength="3" [(ngModel)]='document.title' name='title' type="text"
-              placeholder="Enter a title" #titleInputRef='ngModel' ngModel>
-            <div class="alert alert-danger" style="z-index: 2;" *ngIf="titleInputRef.errors?.minlength">
-              The minimum is 3 letters!
+      <div class="ml-auto mr-3">
+        <form name='documentsForm' (ngSubmit)="onAddDocument(documentsForm)" #documentsForm="ngForm">
+          <div class="row mr-1">
+            <div>
+              <div class="input-header">
+                <input id='title-input' required minlength="3" [(ngModel)]='document.title' name='title' type="text"
+                  placeholder="Enter a title" #titleInputRef='ngModel' ngModel>
+                <div class="alert alert-danger position-absolute " style="z-index: 2;"
+                  *ngIf="titleInputRef.errors?.minlength">
+                  The minimum is 3 letters!
+                </div>
+                <div class="alert alert-success hideMe position-absolute w-100" style="z-index: 2;"
+                  *ngIf="documentsForm.submitted ">
+                  Alright!
+                </div>
+              </div>
+              <div class="float-left mt-2 pr-3 text-danger" *ngIf="titleInputRef.errors?.required">
+                * Required!
+              </div>
             </div>
-            <div class="alert alert-success hideMe " style="z-index: 2;" *ngIf="documentsForm.submitted ">
-              Alright!
+            <div class="ml-auto mr-4 pl-3">
+              <div *ngIf='!isSave'>
+                <app-button [disabled]="!titleInputRef.valid ? true : false" text='Update' type="submit">Update
+                </app-button>
+              </div>
+              <div *ngIf='isSave'>
+                <app-button id='save-button' [disabled]="!titleInputRef.valid ? true : false" text='Save' type="submit">
+                  Save</app-button>
+              </div>
             </div>
           </div>
-          <div class="float-left mt-2 pl-3 text-danger" *ngIf="titleInputRef.errors?.required">
-            * required!
-          </div>
-        </div>
-        <div class="btn-header-update disabled" *ngIf='!isSave'>
-          <app-button backgroundColor='#43A9FF' [disabled]="!titleInputRef.valid ? true : false" color='white'
-            text='Update' type="submit">Update</app-button>
-        </div>
-        <div class="btn-header-save" *ngIf='isSave'>
-          <app-button id='save-button' backgroundColor='#43A9FF' [disabled]="!titleInputRef.valid ? true : false" color='white'
-            text='Save' type="submit">Save</app-button>
-        </div>
-      </form>
-      <div class="form-header">
-
-        <div>
-          <app-button id='documents-hide-button' class="float-right mr-2" backgroundColor='#43A9FF' color='white' [text]='buttonName'
-            (btnClick)='fetchSavedDocuments()'></app-button>
-        </div>
+        </form>
       </div>
     </div>
-  </div>
-</nav>
+
+    <ul class="navbar-nav ml-auto nav-flex-icons">
+      <li class="nav-item avatar dropdown" dropdown>
+        <a dropdownToggle mdbWavesEffect type="button" class="nav-link text-dark dropdown-toggle waves-light"
+          mdbWavesEffect>
+          <img src="https://mdbootstrap.com/img/Photos/Avatars/avatar-13.jpg" alt=""
+            class="img-fluid rounded-circle z-depth-0" style="width:75px;height:75px; border:3px solid black;"></a>
+        <div *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown dropdown-primary" role="menu">
+          <a  class=" dropdown-item waves-light font-weight-bolder text-dark" mdbWavesEffect>{{user}}</a>
+          <a (click)="logout();" class=" dropdown-item waves-light font-weight-bolder text-dark"
+            mdbWavesEffect>Logout</a>
+        </div>
+      </li>
+    </ul>
+  </links>
+</mdb-navbar>

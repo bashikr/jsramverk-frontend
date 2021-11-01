@@ -60,7 +60,7 @@ footer a {
 
 .logo {
   padding-left: 10px;
-  filter: invert(0.5) sepia(1) saturate(5) hue-rotate(175deg);
+  filter: invert(0.5) sepia(1) saturate(50) hue-rotate(195deg);
 }
 
 .btn-header {
@@ -71,49 +71,21 @@ footer a {
 .input-header {
   margin-right: 1px;
   position: relative;
-  float:right;
+  float: right;
 }
-
-.required-input-container{
-  position: absolute;
-  right: inherit;
-  margin-right: 230px;
-  width: 300px;
-}
-
 
 .input-header input {
-  padding: 10px 15px;
+  padding: 7.5px;
+  border-radius: 4px;
+  border: 1px solid darkgrey;
 }
 
-.form-header {
-  position:absolute;
-  right: inherit;
-  float: right;
-  margin-right: 5px;
-}
-
-.btn-header-save {
-  position: relative;
-  right: inherit;
-  float: right;
-  border-radius: 5%;
-  margin-right: 150px;
-}
-
-.btn-header-update {
-  position: relative;
-  right: inherit;
-  float: right;
-  border-radius: 5%;
-  margin-right: 135px;
-}
-
-html, body {
-  height:100%;
-  width:100%;
-  margin:0;
-  padding:0;
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .hideMe {
@@ -128,16 +100,27 @@ html, body {
   animation-fill-mode: forwards;
 }
 @keyframes cssAnimation {
-  0%   {opacity: 1;}
-  90%  {opacity: 1;}
-  100% {opacity: 0;}
+  0% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 @-webkit-keyframes cssAnimation {
-  0%   {opacity: 1;}
-  90%  {opacity: 1;}
-  100% {opacity: 0;}
+  0% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
-
 
 @media only screen and (max-width: 950px) {
   .title {

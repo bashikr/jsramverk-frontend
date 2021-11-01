@@ -95,6 +95,7 @@ export class CKEditorComponent implements OnInit {
         }
         setTimeout(() => {
           this.documentsAPI.updateDocReq(this.model);
+          this.documentsAPI.updateSharedDocReq(this.model);
         }, 2000);
       });
   }

@@ -2,6 +2,7 @@ export interface UpdateDoc {
   '_id': string,
   'title'?: string,
   'content'?: string,
+  'creationDate'?: Date | null,
   'updateDate'?: Date
 }
 

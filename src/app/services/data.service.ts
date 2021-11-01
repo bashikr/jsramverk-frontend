@@ -10,7 +10,7 @@ export class DataService {
 
   updateDocument(docObj: UpdateDoc) {
     this.docSubject.next({
-      _id: docObj._id,
+      _id!: docObj._id,
       title: docObj.title,
       content: docObj.content,
       updateDate: new Date(),

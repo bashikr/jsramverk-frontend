@@ -1,10 +1,12 @@
+import { AuthAPIService } from 'src/app/services/auth.api.service';
+import { AuthGuard } from './services/auth.guard';
 import { DocumentsComponent } from './components/documents/documentsList.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { NgModule } from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -18,6 +20,13 @@ import { DocEditorModule } from './components/ckeditor/ckeditor.module';
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { SocketIoService } from './services/socket.io.service';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
+
+import { MDBBootstrapModule } from 'angular-bootstrap-md';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { InterceptorService } from './services/interceptor.service';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
 let baseURL: string = 'http://localhost:1337/';
 const LOCAL_DOMAINS: Array<string> = ['localhost', '127.0.0.1'];
@@ -30,6 +39,7 @@ if (LOCAL_DOMAINS.includes(window.location.hostname)) {
 
 const config: SocketIoConfig = { url: baseURL, options: {} };
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,6 +47,9 @@ const config: SocketIoConfig = { url: baseURL, options: {} };
     HeaderComponent,
     ButtonComponent,
     DocumentsComponent,
+    LoginComponent,
+    RegisterComponent,
+    PageNotFoundComponent,
   ],
   imports: [
     BrowserModule,
@@ -45,12 +58,22 @@ const config: SocketIoConfig = { url: baseURL, options: {} };
     NgbModule,
     DocEditorModule,
     FormsModule,
+    ReactiveFormsModule,
     CommonModule,
     FontAwesomeModule,
     RouterModule.forRoot([]),
     SocketIoModule.forRoot(config),
+    MDBBootstrapModule.forRoot(),
+    BrowserAnimationsModule,
   ],
-  providers: [LogService, SocketIoService],
+  schemas: [NO_ERRORS_SCHEMA],
+  providers: [
+    AuthGuard,
+    AuthAPIService,
+    {provide: HTTP_INTERCEPTORS,
+    useClass: InterceptorService,
+    multi: true,
+  }, LogService, SocketIoService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

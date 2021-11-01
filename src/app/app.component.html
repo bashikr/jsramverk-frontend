@@ -1,14 +1,15 @@
 <title>{{title}}</title>
-<!-- <div class="content"><span>{{title}}</span></div> -->
 
-<app-header></app-header>
-<div class="container-fluid">
-  <div class="row" style="background-color: #F8F9FA;">
-    <div class="col-2">
-      <app-documents-list></app-documents-list>
-    </div>
-    <div class="container col-7 float-right editor-responsive">
-      <app-ckeditor></app-ckeditor>
+<div *ngIf="routerRes === '/home'">
+  <app-header></app-header>
+  <div class="container-fluid">
+    <div class="row pt-4 p-4" style="background-color: white">
+      <div class="col-2">
+        <app-documents-list></app-documents-list>
+      </div>
+      <div class="container col-7 float-right editor-responsive">
+        <app-ckeditor></app-ckeditor>
+      </div>
     </div>
   </div>
 </div>

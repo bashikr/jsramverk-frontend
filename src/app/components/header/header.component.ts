@@ -1,3 +1,5 @@
+import { Router } from '@angular/router';
+import { AuthAPIService } from 'src/app/services/auth.api.service';
 import { UpdateDoc } from './../documents/docs.interface';
 import { DataService } from '../../services/data.service';
 import { DocumentsAPIService } from '../../services/documents.api.service';
@@ -16,12 +18,14 @@ export class HeaderComponent {
   faFileAlt = faFileAlt;
   public isSave: boolean = true;
   public toggleDocuments: boolean = false;
+  public user: string | null = '';
   public buttonName: string = 'Documents';
 
   public document: UpdateDoc = {
     _id: '',
     title: '',
     content: '',
+    creationDate: null,
     updateDate: new Date(),
   };
 
@@ -29,7 +33,9 @@ export class HeaderComponent {
     private dataService: DataService,
     private documentsAPI: DocumentsAPIService,
     private btnClicksService: BtnClicksService,
-    private socketIoService: SocketIoService
+    private socketIoService: SocketIoService,
+    private authAPIService: AuthAPIService,
+    private router: Router
   ) {
     this.btnClicksService
       .updateBtnTglValue()
@@ -38,6 +44,7 @@ export class HeaderComponent {
       this.document.title = document.title;
       this.document._id = document._id;
       this.document.content = document.content;
+      this.document.creationDate = document.creationDate;
     });
     this.btnClicksService.deleteBtnClick().subscribe(() => {
       this.document.title = '';
@@ -46,6 +53,7 @@ export class HeaderComponent {
     this.dataService.updatedDocument().subscribe((document) => {
       this.document.content = document.content;
     });
+    this.user = localStorage.getItem('userName');
   }
 
   onAddDocument(form: NgForm) {
@@ -59,6 +67,7 @@ export class HeaderComponent {
         title: form.value.title,
         content: this.document.content,
       });
+
       this.btnClicksService.clickSaveBtn();
       this.document.title = '';
     } else if (this.isSave === false) {
@@ -73,6 +82,7 @@ export class HeaderComponent {
 
       this.btnClicksService.clickUpdateBtn();
       this.documentsAPI.updateDocReq(this.document);
+      this.documentsAPI.updateSharedDocReq(this.document);
       this.document.title = '';
     }
   }
@@ -82,11 +92,21 @@ export class HeaderComponent {
       this.buttonName = 'Hide';
       this.toggleDocuments = true;
       this.documentsAPI.docsReq();
+      this.documentsAPI.usersReq();
+      this.documentsAPI.sharedDocumentsReq();
       this.btnClicksService.clickDocsBtn(true);
     } else {
       this.buttonName = 'Documents';
       this.toggleDocuments = false;
       this.btnClicksService.clickDocsBtn(false);
     }
+  }
+
+  logout() {
+    this.authAPIService.logout().subscribe((success) => {
+      if (success) {
+        this.router.navigateByUrl('/login');
+      }
+    });
   }
 }

@@ -34,7 +34,6 @@ describe('ButtonComponent', () => {
     spyOn(component.btnClick, 'emit');
 
     let button = fixture.debugElement.nativeElement.querySelector('button');
-    // button.dispatchEvent(new Event('click'));
     button.click()
 
     expect(component.btnClick.emit).toHaveBeenCalledTimes(1);

@@ -4,6 +4,8 @@ import { faTrashAlt, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { DisplayDoc } from './docs.interface';
 import { BtnClicksService } from 'src/app/services/btnClicks.service';
 import { SocketIoService } from 'src/app/services/socket.io.service';
+import { User } from './user.interface';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-documents-list',
@@ -12,6 +14,12 @@ import { SocketIoService } from 'src/app/services/socket.io.service';
 })
 export class DocumentsComponent {
   public documents?: [DisplayDoc];
+  public sharedDocuments?: [DisplayDoc];
+  public users?: [User];
+  public email?: string;
+  public id: string = '';
+  public returnUserRes!: string;
+
   faTrashAlt = faTrashAlt;
   faEdit = faEdit;
 
@@ -24,6 +32,13 @@ export class DocumentsComponent {
   ) {
     this.documentsAPI.docsRes().subscribe((documents) => {
       this.documents = documents;
+    });
+    this.documentsAPI.sharedDocumentsRes().subscribe((documents) => {
+      console.log(documents);
+      this.sharedDocuments = documents;
+    });
+    this.documentsAPI.usersRes().subscribe((users) => {
+      this.users = users;
     });
     this.btnClicksService.docsBtnClick().subscribe((bool) => {
       this.visibleDocs = bool;
@@ -46,5 +61,25 @@ export class DocumentsComponent {
 
     this.btnClicksService.tglUpdateBtn(false);
     return this.documentsAPI.docByIdReq(id);
+  }
+
+  getId(id: string) {
+    this.id = id;
+  }
+
+  public addUser(usersForm: NgForm) {
+    if (usersForm.invalid) {
+      return;
+    }
+
+    if (usersForm.value.email !== undefined) {
+      this.documentsAPI.allowUserReq({
+        email: usersForm.value.email,
+        id: this.id,
+      });
+      this.returnUserRes = 'Done';
+    } else {
+      this.returnUserRes = 'Choose a user first!';
+    }
   }
 }

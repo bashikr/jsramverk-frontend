@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Login Template</title>
+  <link href="https://fonts.googleapis.com/css?family=Karla:400,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.8.95/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./login.component.css">
+</head>
+
+<body>
+  <main class="d-flex align-items-center min-vh-75 py-lg-5 py-md-0">
+    <div class="container">
+      <div class="card login-card">
+        <div class="row no-gutters">
+          <div class="col-md-5">
+            <img src="assets/images/login.jpg" alt="login" class="login-card-img">
+          </div>
+          <div class="col-md-7">
+            <div class="card-body">
+              <div class="brand-wrapper">
+                <img src="assets/images/favicon.ico" alt="logo" class="logo">
+                <h3 class="font-weight-bolder" style="margin-left: 50px; margin-top: -37px;">MagicEditor</h3>
+              </div>
+              <p class="login-card-description">Sign into your account</p>
+              <form name='loginForm' (ngSubmit)="onLogin(loginForm)" #loginForm="ngForm">
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="email" name="email" id="email" class="form-control mb-1" required
+                    [(ngModel)]='loginObj.email' #emailInputRef='ngModel' [pattern]="emailPattern">
+
+                    <div class="alert alert-danger position-static " style="z-index: 2;"
+                    *ngIf="emailInputRef.errors?.pattern">
+                    Enter a valid email! Ex: example@domain.com
+                  </div>
+                  <div class="alert alert-success hideMe position-static" style="z-index: 2;"
+                    *ngIf="emailInputRef?.valid">
+                    Alright!
+                  </div>
+                </div>
+
+
+                <div class="form-group mb-4">
+                  <label for="password">Password</label>
+                  <input type="password" name="password" id="password" class="form-control mb-1" required minlength="6"
+                    [(ngModel)]='loginObj.password' #passwordInputRef='ngModel'>
+
+                    <div class="alert alert-danger position-static " style="z-index: 2;"
+                    *ngIf="passwordInputRef.errors?.minlength">
+                    The minimum is 6 letters!
+                  </div>
+                  <div class="alert alert-success hideMe position-static" style="z-index: 2;"
+                    *ngIf="passwordInputRef?.valid">
+                    Alright!
+                  </div>
+                </div>
+                <input name="login" id="login" class="btn btn-block login-btn mb-4" type="submit" value="Login"
+                  [disabled]="!(emailInputRef.valid && passwordInputRef.valid) ? true : false">
+              </form>
+              <div style="color: red;">{{failMessage}}</div>
+              <div style="color: green;">{{successMessage}}</div>
+
+              <div class="form-prompt-wrapper">
+                <a routerLink="/reset" routerLinkActive="active" class="forgot-password-link">Forgot password?</a>
+              </div>
+              <p class="login-card-footer-text">Don't have an account? <a routerLink="/register"
+                  routerLinkActive="active" class="text-reset">Register here</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</body>
+
+</html>
