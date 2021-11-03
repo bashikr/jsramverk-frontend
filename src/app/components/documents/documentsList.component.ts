@@ -14,7 +14,7 @@ import { NgForm } from '@angular/forms';
 })
 export class DocumentsComponent {
   public documents?: [DisplayDoc];
-  public sharedDocuments?: [DisplayDoc];
+  public sharedDocuments?: DisplayDoc[];
   public users?: [User];
   public email?: string;
   public id: string = '';
@@ -34,8 +34,20 @@ export class DocumentsComponent {
       this.documents = documents;
     });
     this.documentsAPI.sharedDocumentsRes().subscribe((documents) => {
-      console.log(documents);
-      this.sharedDocuments = documents;
+      let res = documents.map((document: any) => {
+        return document['docs'];
+      });
+      let arr = [];
+
+      for (let i = 0; i < res.length; i++) {
+        for (let j = 0; j < res[i].length; j++) {
+          if (Object.keys(res[i][j]).includes('allowed_users')) {
+            arr.push(res[i][j]);
+          }
+        }
+      }
+
+      this.sharedDocuments = arr;
     });
     this.documentsAPI.usersRes().subscribe((users) => {
       this.users = users;

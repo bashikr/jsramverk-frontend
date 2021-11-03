@@ -1,4 +1,3 @@
-import { AuthAPIService } from 'src/app/services/auth.api.service';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
@@ -17,7 +16,7 @@ export class DocumentsAPIService {
   readonly baseURL: string;
   private LOCAL_DOMAINS: Array<string> = ['localhost', '127.0.0.1'];
 
-  constructor(public http: HttpClient, private authAPIService: AuthAPIService) {
+  constructor(public http: HttpClient) {
     if (this.LOCAL_DOMAINS.includes(window.location.hostname)) {
       this.baseURL = 'http://localhost:1337/';
     } else {
@@ -31,16 +30,31 @@ export class DocumentsAPIService {
   }
 
   docsReq() {
-    console.log(
-      `this.authAPIService.getJwtToken()`,
-      this.authAPIService.getJwtToken()
-    );
     return this.http
-      .get(this.baseURL + 'documents', {
-        observe: 'response',
-      })
+      .post(
+        this.baseURL + 'graphql',
+        {
+          query:
+            '\n' +
+            '{\n' +
+            '  user {\n' +
+            '    docs {\n' +
+            '      _id,\n' +
+            '      title,\n' +
+            '      content,\n' +
+            '      creationDate,\n' +
+            '      updateDate,\n' +
+            '      allowed_users\n' +
+            '    }\n' +
+            '\t}\n' +
+            '}',
+        },
+        {
+          observe: 'response',
+        }
+      )
       .subscribe((res: any) => {
-        return this.documentsSubject.next(res.body);
+        return this.documentsSubject.next(res.body.data.user.docs);
       });
   }
 

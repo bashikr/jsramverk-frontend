@@ -1,16 +1,16 @@
 <form name='usersForm' (ngSubmit)="addUser(usersForm)" #usersForm="ngForm">
-<ul class="float-left" *ngFor="let document of documents;let i=index;">
-  <div class="jumbotron text-left pt-2 pl-3 border border-info" *ngIf='visibleDocs === true'>
-    <h4>Document {{i + 1}}</h4>
-    <p>Title: {{document.title}}</p>
-    <p>Creation date: {{document.creationDate}}</p>
-    <p class="font-weight-bold">Select collaboration user</p>
-      <select  class="mr-2 mb-2 p-2" style="width: 120px;"   [(ngModel)]='email' name="email" >
-          <option type="text" [value]="user.email" *ngFor="let user of users;let i=index;" >
-            {{user.email}}
-          </option>
+  <ul class="float-left" *ngFor="let document of documents;let i=index;">
+    <div class="jumbotron text-left pt-2 pl-3 border border-info" *ngIf='visibleDocs === true'>
+      <h4>Document {{i + 1}}</h4>
+      <p>Title: {{document.title}}</p>
+      <p>Creation date: {{document.creationDate}}</p>
+      <p class="font-weight-bold">Select collaboration user</p>
+      <select class="mr-2 mb-2 p-2" style="width: 120px;" [(ngModel)]='email' name="email">
+        <option type="text" [value]="user.email" *ngFor="let user of users;let i=index;">
+          {{user.email}}
+        </option>
       </select>
-      <input class="btn btn-dark p-2" (click)="getId(document._id)" type="submit" value="Add"/>
+      <input class="btn btn-dark p-2" (click)="getId(document._id)" type="submit" value="Add" />
       <p>{{returnUserRes}}</p>
       <div>
         <span id='trash-span-fontawesome' (click)="deleteDocument(document._id)" class="fa-2x float-left">
@@ -22,16 +22,16 @@
       </div>
     </div>
   </ul>
-  <ul class="float-left" *ngFor="let document of sharedDocuments;let i=index;">
+  <ul class="float-left" *ngFor="let item of sharedDocuments;let i=index;">
     <div class="jumbotron text-left pt-2 pl-3 border border-info" *ngIf='visibleDocs === true'>
       <h4>Document {{i + 1}}</h4>
-      <p>Title: {{document.title}}</p>
-      <p>Creation date: {{document.creationDate}}</p>
-        <div>
-          <span id='edit-span-fontawesome' (click)="updateDocument(document._id)" class="fa-2x float-right">
-            <fa-icon alt="edit icon" [icon]="faEdit">Edit</fa-icon>
-          </span>
-        </div>
+      <p>Title: {{item.title}}</p>
+      <p>Creation date: {{item.creationDate}}</p>
+      <div>
+        <span id='edit-span-fontawesome' (click)="updateDocument(item._id)" class="fa-2x float-right">
+          <fa-icon alt="edit icon" [icon]="faEdit">Edit</fa-icon>
+        </span>
       </div>
-    </ul>
+    </div>
+  </ul>
 </form>
