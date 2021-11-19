@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { CreateDoc, UpdateDoc } from '../components/documents/docs.interface';
-import { AllowedUser } from '../components/documents/user.interface';
+import { InviteUser } from '../components/documents/user.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -74,9 +74,9 @@ export class DocumentsAPIService {
     return this.usersSubject.asObservable();
   }
 
-  allowUserReq(allowedUser: AllowedUser) {
+  sendCollaborationInvite(inviteUser: InviteUser) {
     return this.http
-      .post(this.baseURL + 'documents/allow-user', allowedUser, {
+      .post(this.baseURL + 'collaboration-invite', inviteUser, {
         observe: 'response',
       })
       .subscribe((res: any) => {
@@ -84,7 +84,7 @@ export class DocumentsAPIService {
       });
   }
 
-  allowUserRes() {
+  sendCollaborationInviteRes() {
     return this.userSubject.asObservable();
   }
 
