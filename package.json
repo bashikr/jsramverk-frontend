@@ -40,6 +40,8 @@
     "jspdf": "^2.4.0",
     "karma-coverage-istanbul-reporter": "^3.0.3",
     "karma-firefox-launcher": "^2.1.1",
+    "monaco-editor": "^0.30.1",
+    "ngx-monaco-editor": "12.0.0",
     "ngx-socket-io": "^4.1.0",
     "rxfire": "^6.0.2",
     "rxjs": "~6.6.0",

@@ -18,6 +18,16 @@
           <li class="nav-item active ">
             <app-button id='documents-hide-button' [text]='buttonName' (btnClick)='fetchSavedDocuments()'></app-button>
           </li>
+          <li class="nav-item active ml-3 font-weight-bolder ">
+            <strong>
+              <a class="text-dark nav-link" [routerLink]="['/home']">Home</a>
+            </strong>
+          </li>
+          <li class="nav-item active ml-3 font-weight-bolder ">
+            <strong>
+              <a class="text-dark nav-link" [routerLink]="['/code-editor']">Code Mode</a>
+            </strong>
+          </li>
         </ul>
       </div>
 
@@ -63,7 +73,7 @@
           <img src="https://mdbootstrap.com/img/Photos/Avatars/avatar-13.jpg" alt=""
             class="img-fluid rounded-circle z-depth-0" style="width:75px;height:75px; border:3px solid black;"></a>
         <div *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown dropdown-primary" role="menu">
-          <a  class=" dropdown-item waves-light font-weight-bolder text-dark" mdbWavesEffect>{{user}}</a>
+          <a class=" dropdown-item waves-light font-weight-bolder text-dark" mdbWavesEffect>{{user}}</a>
           <a (click)="logout();" class=" dropdown-item waves-light font-weight-bolder text-dark"
             mdbWavesEffect>Logout</a>
         </div>

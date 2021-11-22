@@ -1,0 +1,26 @@
+<app-header></app-header>
+<div class="container-fluid">
+  <div class="row pt-2 p-4" style="background-color: white; min-height:770px;">
+    <div class="col-1">
+      <app-documents-list></app-documents-list>
+    </div>
+    <div class="container col-7 float-right">
+      <div>
+        <app-button class="float-right" text='Run' (click)="compile()"></app-button>
+        <label class="switch">
+          <input type="checkbox" (click)="modeSwitch()" checked>
+          <span class="slider round"></span>
+        </label>
+      </div>
+      <div class="mt-3 shadow-lg p-3 mb-5 bg-dark rounded">
+        <ngx-monaco-editor style="height: 500px; margin-top:10px;" class="my-code-editor " [options]="editorOptions"
+          (keyup)="onKeyUp($event)" [(ngModel)]="model.content" (onInit)="onInit($event)"></ngx-monaco-editor>
+        <div class=" bg-dark p-4 text-white">
+          <p>
+            user@desktop$ {{decodedOutput || 'Hello world!'}}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

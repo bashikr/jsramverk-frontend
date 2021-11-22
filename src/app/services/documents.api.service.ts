@@ -1,3 +1,4 @@
+import { shareReplay } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
@@ -26,7 +27,10 @@ export class DocumentsAPIService {
   }
 
   createDocReq(document: CreateDoc) {
-    this.http.post(this.baseURL + 'documents/create-doc', document).subscribe();
+    return this.http
+      .post(this.baseURL + 'documents/create-doc', document).pipe(
+        shareReplay(1)
+    );
   }
 
   docsReq() {
@@ -42,6 +46,7 @@ export class DocumentsAPIService {
             '      _id,\n' +
             '      title,\n' +
             '      content,\n' +
+            '      docType,\n' +
             '      creationDate,\n' +
             '      updateDate,\n' +
             '      allowed_users\n' +

@@ -1,3 +1,4 @@
+import { CodeEditorComponent } from './components/code-editor/code-editor.component';
 import { AuthGuard } from './services/auth.guard';
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from '../app/components/login/login.component';
@@ -11,6 +12,7 @@ const routes: Routes = [
   { path: 'home', component: AppComponent, canActivate: [AuthGuard]},
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'code-editor', component: CodeEditorComponent },
   { path: '**', component: PageNotFoundComponent }
 ];
 

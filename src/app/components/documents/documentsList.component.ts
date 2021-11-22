@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { DocumentsAPIService } from '../../services/documents.api.service';
-import { faTrashAlt, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faEdit, faCode } from '@fortawesome/free-solid-svg-icons';
 import { DisplayDoc } from './docs.interface';
 import { BtnClicksService } from 'src/app/services/btnClicks.service';
 import { SocketIoService } from 'src/app/services/socket.io.service';
@@ -9,6 +9,7 @@ import { NgForm } from '@angular/forms';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-documents-list',
@@ -25,17 +26,20 @@ export class DocumentsComponent {
   public returnUserRes!: string;
   public isVisiblePDF: boolean = false;
   public visibleDocs: boolean = false;
+  public currentURI: string = 'home';
   public emailPattern = '^[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$';
   closeResult = '';
 
   faTrashAlt = faTrashAlt;
   faEdit = faEdit;
+  faCode = faCode;
 
   constructor(
     private documentsAPI: DocumentsAPIService,
     private btnClicksService: BtnClicksService,
     private socketIoService: SocketIoService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private route: ActivatedRoute
   ) {
     this.documentsAPI.docsRes().subscribe((documents) => {
       this.documents = documents;
@@ -63,6 +67,14 @@ export class DocumentsComponent {
       this.visibleDocs = bool;
       return this.visibleDocs;
     });
+  }
+
+  ngOnInit(): void {
+    if(this.route.snapshot.url[0].path === 'home') {
+      this.currentURI = 'text';
+    } else if(this.route.snapshot.url[0].path === 'code-editor') {
+      this.currentURI = 'code';
+    }
   }
 
   public deleteDocument(id: string) {

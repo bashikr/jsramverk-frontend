@@ -22,12 +22,11 @@ import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { SocketIoService } from './services/socket.io.service';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
-
+import { InterceptorService } from './services/interceptor.service';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { InterceptorService } from './services/interceptor.service';
-import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
 let baseURL: string = 'http://localhost:1337/';
 const LOCAL_DOMAINS: Array<string> = ['localhost', '127.0.0.1'];
@@ -40,6 +39,17 @@ if (LOCAL_DOMAINS.includes(window.location.hostname)) {
 
 const config: SocketIoConfig = { url: baseURL, options: {} };
 
+import { MonacoEditorModule, NgxMonacoEditorConfig } from 'ngx-monaco-editor';
+import { NGX_MONACO_EDITOR_CONFIG } from 'ngx-monaco-editor';
+import { CodeEditorComponent } from './components/code-editor/code-editor.component';
+
+const monacoConfig: NgxMonacoEditorConfig = {
+  baseUrl: './assets',
+  defaultOptions: { scrollBeyondLastLine: false },
+  onMonacoLoad: () => {
+    console.log((<any>window).monaco);
+  },
+};
 
 @NgModule({
   declarations: [
@@ -51,6 +61,7 @@ const config: SocketIoConfig = { url: baseURL, options: {} };
     LoginComponent,
     RegisterComponent,
     PageNotFoundComponent,
+    CodeEditorComponent,
   ],
   imports: [
     BrowserModule,
@@ -66,15 +77,17 @@ const config: SocketIoConfig = { url: baseURL, options: {} };
     SocketIoModule.forRoot(config),
     MDBBootstrapModule.forRoot(),
     BrowserAnimationsModule,
+    MonacoEditorModule.forRoot(monacoConfig),
   ],
   schemas: [NO_ERRORS_SCHEMA],
   providers: [
+    { provide: NGX_MONACO_EDITOR_CONFIG, useValue: monacoConfig },
     AuthGuard,
     AuthAPIService,
-    {provide: HTTP_INTERCEPTORS,
-    useClass: InterceptorService,
-    multi: true,
-  }, LogService, SocketIoService],
+    { provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true },
+    LogService,
+    SocketIoService,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

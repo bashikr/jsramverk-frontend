@@ -1,4 +1,4 @@
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthAPIService } from 'src/app/services/auth.api.service';
 import { UpdateDoc } from './../documents/docs.interface';
 import { DataService } from '../../services/data.service';
@@ -8,7 +8,6 @@ import { faFileAlt } from '@fortawesome/free-solid-svg-icons';
 import { NgForm } from '@angular/forms';
 import { BtnClicksService } from 'src/app/services/btnClicks.service';
 import { SocketIoService } from 'src/app/services/socket.io.service';
-
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -25,6 +24,7 @@ export class HeaderComponent {
     _id: '',
     title: '',
     content: '',
+    docType: '',
     creationDate: null,
     updateDate: new Date(),
   };
@@ -35,24 +35,28 @@ export class HeaderComponent {
     private btnClicksService: BtnClicksService,
     private socketIoService: SocketIoService,
     private authAPIService: AuthAPIService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.btnClicksService
       .updateBtnTglValue()
       .subscribe((res) => (this.isSave = res));
     this.documentsAPI.docByIdRes().subscribe((document) => {
-      this.document.title = document.title;
       this.document._id = document._id;
+      this.document.title = document.title;
       this.document.content = document.content;
+      this.document.docType = document.docType;
       this.document.creationDate = document.creationDate;
     });
     this.btnClicksService.deleteBtnClick().subscribe(() => {
       this.document.title = '';
       this.isSave = true;
     });
+
     this.dataService.updatedDocument().subscribe((document) => {
       this.document.content = document.content;
     });
+
     this.user = localStorage.getItem('userName');
   }
 
@@ -66,15 +70,17 @@ export class HeaderComponent {
         _id: this.document._id,
         title: form.value.title,
         content: this.document.content,
+        docType: this.document.docType,
       });
-
       this.btnClicksService.clickSaveBtn();
+      this.dataService.setCurrentEditor(this.route.snapshot.url[0].path);
       this.document.title = '';
     } else if (this.isSave === false) {
       this.dataService.updateDocument({
         _id: this.document._id,
         content: this.document.content,
         title: form.value.title,
+        docType: this.document.docType,
       });
 
       this.isSave = true;

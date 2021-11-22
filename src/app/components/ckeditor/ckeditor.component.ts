@@ -1,7 +1,8 @@
+import { Subscription } from 'rxjs';
 import { UpdateDoc } from './../documents/docs.interface';
 import { DataService } from '../../services/data.service';
 import { DocumentsAPIService } from '../../services/documents.api.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import * as DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 import { BtnClicksService } from 'src/app/services/btnClicks.service';
 import { SocketIoService } from 'src/app/services/socket.io.service';
@@ -10,12 +11,14 @@ import { SocketIoService } from 'src/app/services/socket.io.service';
   templateUrl: './ckeditor.component.html',
   styleUrls: ['./ckeditor.component.css'],
 })
-export class CKEditorComponent implements OnInit {
+export class CKEditorComponent implements OnInit, OnDestroy {
   public Editor = DecoupledEditor;
+  clickSubscriber: Subscription;
 
   public model: UpdateDoc = {
     _id: '',
     title: 'undefined',
+    docType: 'text',
     content: '<p>Hello, world!</p>',
   };
 
@@ -23,6 +26,7 @@ export class CKEditorComponent implements OnInit {
     this.model._id = document._id;
     this.model.content = document.content;
     this.model.title = document.title;
+    this.model.docType = 'text';
   }
 
   constructor(
@@ -31,17 +35,31 @@ export class CKEditorComponent implements OnInit {
     private btnClicksService: BtnClicksService,
     private socketIoService: SocketIoService
   ) {
-    this.btnClicksService.saveBtnClick().subscribe(() => {
-      this.documentsAPI.createDocReq({
-        title: this.model.title,
-        content: this.model.content,
-      });
-      this.model.content = '<p>Hello, world!</p>';
-    });
-
     this.dataService.updatedDocument().subscribe((document) => {
       this.model.title = document.title;
       this.model.content = document.content;
+      this.model.docType = 'text';
+    });
+
+    this.clickSubscriber = this.btnClicksService.saveBtnClick().subscribe(() => {
+      this.dataService.getCurrentEditor().subscribe((res) => {
+        if (res === 'home') {
+         this.documentsAPI.createDocReq({
+            title: this.model.title,
+            content:
+              this.model.content != ''
+                ? this.model.content
+                : '<p>Hello, world!</p>',
+            docType: 'text',
+          }).subscribe();
+          this.model.content = '<p>Hello, world!</p>';
+        }
+      });
+      setTimeout(() => {
+        if(this.clickSubscriber) {
+          this.clickSubscriber.unsubscribe();
+        }
+      }, 600);
     });
 
     this.documentsAPI.docByIdRes().subscribe((object) => {
@@ -50,11 +68,18 @@ export class CKEditorComponent implements OnInit {
 
     this.btnClicksService.updateBtnClick().subscribe(() => {
       this.model.content = '<p>Hello, world!</p>';
+      this.model.docType = 'text';
     });
 
     this.btnClicksService.deleteBtnClick().subscribe(() => {
       this.model.content = '<p>Hello, world!</p>';
     });
+  }
+
+  ngOnDestroy() {
+    if (this.clickSubscriber) {
+      this.clickSubscriber.unsubscribe();
+    }
   }
 
   public onReady(editor: any) {
@@ -77,6 +102,7 @@ export class CKEditorComponent implements OnInit {
       _id: this.model._id,
       content: this.model.content,
       title: this.model.title,
+      docType: 'text',
     });
 
     this.socketIoService.emit('updateDocument', this.model);
@@ -89,6 +115,7 @@ export class CKEditorComponent implements OnInit {
         this.socketIoService.emit('updateContent', {
           id: doc._id,
           content: this.model.content,
+          docType: 'text',
         });
         if (doc._id == this.model._id) {
           this.model.content = doc.content;
