@@ -50,9 +50,8 @@
     </div>
   </div>
 
-  <div class="mt-3">
-    <button class="btn btn-primary btn-block" (click)="exportHtmlToPDF(document)"
-      *ngIf='isVisiblePDF === true && id === document._id && document.docType =="text"'>Download PDF</button>
+  <div class="mt-3" *ngIf='isVisiblePDF === true && id === document._id && document.docType =="text"'>
+    <app-pdf-component [item]="document" [id]="id"></app-pdf-component>
   </div>
 
 </ul>
@@ -68,8 +67,7 @@
       </span>
     </div>
   </div>
-  <div class="mt-3">
-    <button class="btn btn-primary btn-block" (click)="exportHtmlToPDF(item)"
-      *ngIf='isVisiblePDF === true && id === item._id'>Download PDF</button>
+  <div class="mt-3" *ngIf='isVisiblePDF === true && id === item._id'>
+      <app-pdf-component [item]="item" [id]="id"></app-pdf-component>
   </div>
 </ul>

@@ -42,6 +42,7 @@ const config: SocketIoConfig = { url: baseURL, options: {} };
 import { MonacoEditorModule, NgxMonacoEditorConfig } from 'ngx-monaco-editor';
 import { NGX_MONACO_EDITOR_CONFIG } from 'ngx-monaco-editor';
 import { CodeEditorComponent } from './components/code-editor/code-editor.component';
+import { PdfComponentComponent } from './components/pdf-component/pdf-component.component';
 
 const monacoConfig: NgxMonacoEditorConfig = {
   baseUrl: './assets',
@@ -62,6 +63,7 @@ const monacoConfig: NgxMonacoEditorConfig = {
     RegisterComponent,
     PageNotFoundComponent,
     CodeEditorComponent,
+    PdfComponentComponent,
   ],
   imports: [
     BrowserModule,

@@ -6,8 +6,6 @@ import { BtnClicksService } from 'src/app/services/btnClicks.service';
 import { SocketIoService } from 'src/app/services/socket.io.service';
 import { User } from './user.interface';
 import { NgForm } from '@angular/forms';
-import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 
@@ -139,33 +137,6 @@ export class DocumentsComponent {
       });
       this.returnUserRes = 'Done';
       this.modalService.dismissAll('Cross click');
-    }
-  }
-
-  public exportHtmlToPDF(item: DisplayDoc) {
-    if (this.id === item._id) {
-      let data: any = document.getElementById('htmltable');
-
-      html2canvas(data.lastChild.childNodes[1].nextElementSibling).then(
-        (canvas) => {
-          let docWidth = 208;
-          let docHeight = (canvas.height * docWidth) / (canvas.width + 200);
-
-          const contentDataURL = canvas.toDataURL('image/png');
-
-          let doc = new jsPDF('p', 'mm', 'a4');
-          let position = 0;
-          doc.addImage(contentDataURL, 'PNG', 0, position, docWidth, docHeight);
-          if (item.title !== undefined) {
-            doc.save(item.title + '.pdf');
-          } else {
-            doc.save('exportedPdf.pdf');
-          }
-        }
-      );
-      this.isVisiblePDF = false;
-    } else {
-      alert('Please open the document then click on download');
     }
   }
 }

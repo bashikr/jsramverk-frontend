@@ -77,6 +77,7 @@ describe('CKEditorComponent', () => {
       _id: '123456789123',
       title: 'test title',
       content: 'test content',
+      docType: 'text'
     };
 
     component.setValue(fakeDoc);
@@ -84,5 +85,6 @@ describe('CKEditorComponent', () => {
     fixture.detectChanges();
     expect(component.model.content).toBe('test content');
     expect(component.model.title).toBe('test title');
+    expect(component.model.docType).toBe('text');
   }));
 });

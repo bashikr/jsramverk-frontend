@@ -14,6 +14,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { By } from '@angular/platform-browser';
 import { SocketIoService } from 'src/app/services/socket.io.service';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { RouterTestingModule } from '@angular/router/testing';
 
 const config: SocketIoConfig = { url: 'http://localhost:1337', options: {} };
 
@@ -44,7 +45,7 @@ describe('HeaderComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [HeaderComponent],
-      imports: [HttpClientModule, FormsModule, SocketIoModule.forRoot(config)],
+      imports: [HttpClientModule, RouterTestingModule, FormsModule, SocketIoModule.forRoot(config)],
       providers: [BtnClicksService, SocketIoService],
     }).compileComponents();
   });
@@ -94,7 +95,7 @@ describe('HeaderComponent', () => {
     expect(component.buttonName).toEqual('Documents');
   });
 
-  it('should send request to get a mock documents array when calling fetchSavedDocuments()', fakeAsync(() => {
+  it('should send request to get a mock documents array when calling fetchSavedDocuments()', (() => {
     var spyOnFunc = spyOn(documentsAPIService, 'docsReq');
 
     component.fetchSavedDocuments();

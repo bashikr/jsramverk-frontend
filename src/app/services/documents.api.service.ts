@@ -33,6 +33,13 @@ export class DocumentsAPIService {
     );
   }
 
+  compileCodeReq(data: object) {
+    return this.http
+      .post('https://execjs.emilfolino.se/code', data).pipe(
+        shareReplay(1)
+    )
+  }
+
   docsReq() {
     return this.http
       .post(

@@ -1,5 +1,5 @@
 import { Subscription } from 'rxjs';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, OnChanges } from '@angular/core';
 import { UpdateDoc } from './../documents/docs.interface';
 import { DataService } from '../../services/data.service';
 import { DocumentsAPIService } from '../../services/documents.api.service';
@@ -11,7 +11,7 @@ import { SocketIoService } from 'src/app/services/socket.io.service';
   templateUrl: './code-editor.component.html',
   styleUrls: ['./code-editor.component.css'],
 })
-export class CodeEditorComponent implements OnInit, OnDestroy {
+export class CodeEditorComponent implements OnInit, OnDestroy, OnChanges {
   isOn = true;
   public mode = 'vs-dark';
 
@@ -35,11 +35,10 @@ export class CodeEditorComponent implements OnInit, OnDestroy {
     }
   }
 
-  onInit(editor: any) {
-    let line = editor.getPosition();
-    console.log(line);
-  }
   clickSubscriber: Subscription;
+  compileSubscription!: Subscription;
+
+  public decodedOutput: any;
 
   public model: UpdateDoc = {
     _id: '',
@@ -47,7 +46,6 @@ export class CodeEditorComponent implements OnInit, OnDestroy {
     content: 'console.log("Hello world!");',
     docType: 'code',
   };
-  public decodedOutput: string | undefined;
 
   setValue(document: UpdateDoc) {
     this.model._id = document._id;
@@ -96,7 +94,9 @@ export class CodeEditorComponent implements OnInit, OnDestroy {
     this.documentsAPI.docByIdRes().subscribe((object) => {
       this.setValue(object);
     });
+  }
 
+  ngOnChanges() {
     this.btnClicksService.updateBtnClick().subscribe(() => {
       this.model.content = 'console.log("Hello world!");';
     });
@@ -109,6 +109,9 @@ export class CodeEditorComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.clickSubscriber) {
       this.clickSubscriber.unsubscribe();
+    }
+    if (this.compileSubscription) {
+      this.compileSubscription.unsubscribe();
     }
   }
 
@@ -153,19 +156,10 @@ export class CodeEditorComponent implements OnInit, OnDestroy {
       code: btoa(this.model.content || 'console.log("");'),
     };
 
-    fetch('https://execjs.emilfolino.se/code', {
-      body: JSON.stringify(data),
-      headers: {
-        'content-type': 'application/json',
-      },
-      method: 'POST',
-    })
-      .then(function (response) {
-        return response.json();
-      })
-      .then((result: any) => {
-        let decodedOutput = atob(result.data);
-        this.decodedOutput = decodedOutput;
+    this.compileSubscription = this.documentsAPI
+      .compileCodeReq(data)
+      .subscribe((res: any) => {
+        this.decodedOutput = atob(res.data);
       });
   }
 }
