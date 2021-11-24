@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, TemplateRef } from '@angular/core';
 import { DocumentsAPIService } from '../../services/documents.api.service';
 import { faTrashAlt, faEdit, faCode } from '@fortawesome/free-solid-svg-icons';
 import { DisplayDoc } from './docs.interface';
@@ -100,20 +100,20 @@ export class DocumentsComponent {
     this.title = doc.title;
   }
 
-  open(content: any) {
+  open(content: TemplateRef<HTMLElement>) {
     this.modalService
       .open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(
         (result) => {
           this.closeResult = `Closed with: ${result}`;
         },
-        (reason: any) => {
+        (reason: ModalDismissReasons) => {
           this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
         }
       );
   }
 
-  private getDismissReason(reason: any): string {
+  private getDismissReason(reason: ModalDismissReasons): string {
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {

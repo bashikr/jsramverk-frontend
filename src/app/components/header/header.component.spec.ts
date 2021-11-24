@@ -15,6 +15,7 @@ import { By } from '@angular/platform-browser';
 import { SocketIoService } from 'src/app/services/socket.io.service';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { RouterTestingModule } from '@angular/router/testing';
+import { DebugElement } from '@angular/core';
 
 const config: SocketIoConfig = { url: 'http://localhost:1337', options: {} };
 
@@ -23,9 +24,9 @@ describe('HeaderComponent', () => {
   let fixture: ComponentFixture<HeaderComponent>;
   let de;
   let documentsAPIService: any;
-  let dataService: any;
-  let updateBtn: any;
-  let btnClicksService: any;
+  let dataService: DataService;
+  let updateBtn: DebugElement;
+  let btnClicksService: BtnClicksService;
   let titleInput: HTMLInputElement;
   const documents: Array<DisplayDoc> = [
     {

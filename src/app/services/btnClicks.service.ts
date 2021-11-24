@@ -5,10 +5,10 @@ import { Subject, Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class BtnClicksService {
-  private saveButtonSubject = new Subject<any>();
-  private updateButtonSubject = new Subject<any>();
-  private deleteButtonSubject = new Subject<any>();
-  private documentsButtonSubject = new Subject<any>();
+  private saveButtonSubject = new Subject<BtnClicksService>();
+  private updateButtonSubject = new Subject<BtnClicksService>();
+  private deleteButtonSubject = new Subject<BtnClicksService>();
+  private documentsButtonSubject = new Subject<boolean>();
 
   private saveButtonVisible = new Subject<boolean>();
 
@@ -26,7 +26,7 @@ export class BtnClicksService {
     this.updateButtonSubject.next();
   }
 
-  updateBtnClick(): Observable<any> {
+  updateBtnClick(): Observable<BtnClicksService> {
     return this.updateButtonSubject.asObservable();
   }
 
@@ -36,7 +36,7 @@ export class BtnClicksService {
     this.deleteButtonSubject.next();
   }
 
-  deleteBtnClick(): Observable<any> {
+  deleteBtnClick(): Observable<BtnClicksService> {
     return this.deleteButtonSubject.asObservable();
   }
 
@@ -46,7 +46,7 @@ export class BtnClicksService {
     this.documentsButtonSubject.next(bool);
   }
 
-  docsBtnClick(): Observable<any> {
+  docsBtnClick(): Observable<boolean> {
     return this.documentsButtonSubject.asObservable();
   }
 
@@ -56,7 +56,7 @@ export class BtnClicksService {
     this.saveButtonSubject.next();
   }
 
-  saveBtnClick(): Observable<any> {
+  saveBtnClick(): Observable<BtnClicksService> {
     return this.saveButtonSubject.asObservable();
   }
 }

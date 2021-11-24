@@ -7,11 +7,11 @@ import {
   fakeAsync,
   flush,
   TestBed,
-  tick,
 } from '@angular/core/testing';
 import { SocketIoService } from 'src/app/services/socket.io.service';
 import { CodeEditorComponent } from './code-editor.component';
 import { DocumentsAPIService } from 'src/app/services/documents.api.service';
+import { DebugElement } from '@angular/core';
 
 const config: SocketIoConfig = { url: 'http://localhost:1337', options: {} };
 
@@ -19,11 +19,10 @@ describe('CodeEditorComponent', () => {
   let component: CodeEditorComponent;
   let fixture: ComponentFixture<CodeEditorComponent>;
   let de;
-  let documentsAPIService: any;
-  let btnClicksService: any;
-  let executedCodeRes: any;
+  let documentsAPIService: DocumentsAPIService;
+  let executedCodeRes: DebugElement;
   let BtnClicksServiceStub: Partial<BtnClicksService>;
-  let editor: any;
+  let editor: HTMLElement;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -41,7 +40,6 @@ describe('CodeEditorComponent', () => {
     component = fixture.componentInstance;
     de = fixture.debugElement;
     documentsAPIService = de.injector.get(DocumentsAPIService);
-    btnClicksService = de.injector.get(BtnClicksService);
 
     executedCodeRes = fixture.debugElement.query(By.css('#executedCodeRes'));
     editor = fixture.debugElement.query(By.css('#codeEditor')).nativeElement;
@@ -126,11 +124,5 @@ describe('CodeEditorComponent', () => {
     runButton.dispatchEvent(new Event('click'));
     fixture.detectChanges();
     expect(compile).toHaveBeenCalledTimes(2);
-  }));
-
-  it('test ngOnChanges method', fakeAsync(() => {
-    let ngOnChangeSpy = spyOn(component, 'ngOnChanges').and.callThrough();
-    component.ngOnChanges();
-    expect(ngOnChangeSpy).toHaveBeenCalledTimes(1);
   }));
 });

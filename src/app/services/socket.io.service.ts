@@ -15,7 +15,7 @@ export class SocketIoService {
     });
   }
 
-  public emit(eventName: string, data: any) {
+  public emit(eventName: string, data: UpdateDoc | UpdateDoc['_id'] | string) {
       this.socket.emit(eventName, data);
   }
 }

@@ -1,17 +1,18 @@
 import { Subscription } from 'rxjs';
-import { Component, OnInit, OnDestroy, OnChanges } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UpdateDoc } from './../documents/docs.interface';
 import { DataService } from '../../services/data.service';
 import { DocumentsAPIService } from '../../services/documents.api.service';
 import { BtnClicksService } from 'src/app/services/btnClicks.service';
 import { SocketIoService } from 'src/app/services/socket.io.service';
+import { ResolveData } from '@angular/router';
 
 @Component({
   selector: 'app-code-editor',
   templateUrl: './code-editor.component.html',
   styleUrls: ['./code-editor.component.css'],
 })
-export class CodeEditorComponent implements OnInit, OnDestroy, OnChanges {
+export class CodeEditorComponent implements OnInit, OnDestroy {
   isOn = true;
   public mode = 'vs-dark';
 
@@ -37,8 +38,10 @@ export class CodeEditorComponent implements OnInit, OnDestroy, OnChanges {
 
   clickSubscriber: Subscription;
   compileSubscription!: Subscription;
+  createDocUnsubscribe!: Subscription;
+  currentURIUnsubscribe!: Subscription;
 
-  public decodedOutput: any;
+  public decodedOutput!: string;
 
   public model: UpdateDoc = {
     _id: '',
@@ -69,34 +72,34 @@ export class CodeEditorComponent implements OnInit, OnDestroy, OnChanges {
     this.clickSubscriber = this.btnClicksService
       .saveBtnClick()
       .subscribe(() => {
-        this.dataService.getCurrentEditor().subscribe((res) => {
-          if (res === 'code-editor') {
-            this.documentsAPI
-              .createDocReq({
-                title: this.model.title,
-                content:
-                  this.model.content != ''
-                    ? this.model.content
-                    : 'console.log("Hello world!");',
-                docType: 'code',
-              })
-              .subscribe();
-            this.model.content = 'console.log("Hello world!");';
-          }
-        });
-        setTimeout(() => {
-          if (this.clickSubscriber) {
-            this.clickSubscriber.unsubscribe();
-          }
-        }, 600);
+        if (this.currentURIUnsubscribe) {
+          this.currentURIUnsubscribe.unsubscribe();
+        }
+        this.currentURIUnsubscribe = this.dataService
+          .getCurrentEditor()
+          .subscribe((res) => {
+            if (this.createDocUnsubscribe) {
+              this.createDocUnsubscribe.unsubscribe();
+            }
+            if (res === 'code-editor') {
+              this.createDocUnsubscribe = this.documentsAPI
+                .createDocReq({
+                  title: this.model.title,
+                  content:
+                    this.model.content != ''
+                      ? this.model.content
+                      : 'console.log("Hello world!");',
+                  docType: 'code',
+                })
+                .subscribe();
+              this.model.content = 'console.log("Hello world!");';
+            }
+          });
       });
 
     this.documentsAPI.docByIdRes().subscribe((object) => {
       this.setValue(object);
     });
-  }
-
-  ngOnChanges() {
     this.btnClicksService.updateBtnClick().subscribe(() => {
       this.model.content = 'console.log("Hello world!");';
     });
@@ -107,18 +110,24 @@ export class CodeEditorComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnDestroy() {
+    if (this.compileSubscription) {
+      this.compileSubscription.unsubscribe();
+    }
     if (this.clickSubscriber) {
       this.clickSubscriber.unsubscribe();
     }
-    if (this.compileSubscription) {
-      this.compileSubscription.unsubscribe();
+    if (this.currentURIUnsubscribe) {
+      this.currentURIUnsubscribe.unsubscribe();
+    }
+    if (this.createDocUnsubscribe) {
+      this.createDocUnsubscribe.unsubscribe();
     }
   }
 
   public onKeyUp(event: KeyboardEvent) {
     event.preventDefault();
 
-    this.socketIoService.listen('updateContent').subscribe((obj: any) => {
+    this.socketIoService.listen('updateContent').subscribe((obj: UpdateDoc) => {
       this.model.content = obj.content;
     });
 
@@ -137,7 +146,7 @@ export class CodeEditorComponent implements OnInit, OnDestroy, OnChanges {
       .listen('updateDocument')
       .subscribe((doc: UpdateDoc) => {
         this.socketIoService.emit('updateContent', {
-          id: doc._id,
+          _id: doc._id,
           content: this.model.content,
           docType: 'code',
         });
@@ -158,7 +167,7 @@ export class CodeEditorComponent implements OnInit, OnDestroy, OnChanges {
 
     this.compileSubscription = this.documentsAPI
       .compileCodeReq(data)
-      .subscribe((res: any) => {
+      .subscribe((res: ResolveData) => {
         this.decodedOutput = atob(res.data);
       });
   }

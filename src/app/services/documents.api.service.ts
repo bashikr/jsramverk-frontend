@@ -1,15 +1,17 @@
+import { DisplayDoc } from './../components/documents/docs.interface';
 import { shareReplay } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { CreateDoc, UpdateDoc } from '../components/documents/docs.interface';
 import { InviteUser } from '../components/documents/user.interface';
+import { ResolveData } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DocumentsAPIService {
-  private documentsSubject = new Subject<any>();
+  private documentsSubject = new Subject<[DisplayDoc] | undefined>();
   private documentSubject = new Subject<any>();
   private usersSubject = new Subject<any>();
   private userSubject = new Subject<any>();
@@ -26,18 +28,16 @@ export class DocumentsAPIService {
     }
   }
 
-  createDocReq(document: CreateDoc) {
+  createDocReq(document: CreateDoc): Observable<CreateDoc> {
     return this.http
-      .post(this.baseURL + 'documents/create-doc', document).pipe(
-        shareReplay(1)
-    );
+      .post(this.baseURL + 'documents/create-doc', document)
+      .pipe(shareReplay(1));
   }
 
   compileCodeReq(data: object) {
     return this.http
-      .post('https://execjs.emilfolino.se/code', data).pipe(
-        shareReplay(1)
-    )
+      .post('https://execjs.emilfolino.se/code', data)
+      .pipe(shareReplay(1));
   }
 
   docsReq() {
@@ -65,7 +65,7 @@ export class DocumentsAPIService {
           observe: 'response',
         }
       )
-      .subscribe((res: any) => {
+      .subscribe((res: ResolveData) => {
         return this.documentsSubject.next(res.body.data.user.docs);
       });
   }
@@ -77,7 +77,7 @@ export class DocumentsAPIService {
   usersReq() {
     return this.http
       .post(this.baseURL + 'documents/users', { observe: 'response' })
-      .subscribe((res: any) => {
+      .subscribe((res: ResolveData) => {
         return this.usersSubject.next(res);
       });
   }
@@ -91,7 +91,7 @@ export class DocumentsAPIService {
       .post(this.baseURL + 'collaboration-invite', inviteUser, {
         observe: 'response',
       })
-      .subscribe((res: any) => {
+      .subscribe((res: ResolveData) => {
         return this.userSubject.next(res);
       });
   }
@@ -105,7 +105,7 @@ export class DocumentsAPIService {
       .post(this.baseURL + 'documents/shared-documents', {
         observe: 'response',
       })
-      .subscribe((res: any) => {
+      .subscribe((res: ResolveData) => {
         return this.sharedDocuments.next(res);
       });
   }
@@ -119,7 +119,7 @@ export class DocumentsAPIService {
       .get(this.baseURL + 'documents/' + id, {
         observe: 'response',
       })
-      .subscribe((res: any) => {
+      .subscribe((res: ResolveData) => {
         return this.documentSubject.next(res.body);
       });
   }

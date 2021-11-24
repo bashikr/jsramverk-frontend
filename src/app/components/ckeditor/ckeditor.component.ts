@@ -14,6 +14,8 @@ import { SocketIoService } from 'src/app/services/socket.io.service';
 export class CKEditorComponent implements OnInit, OnDestroy {
   public Editor = DecoupledEditor;
   clickSubscriber: Subscription;
+  createDocUnsubscribe!: Subscription;
+  currentURIUnsubscribe!: Subscription;
 
   public model: UpdateDoc = {
     _id: '',
@@ -41,26 +43,33 @@ export class CKEditorComponent implements OnInit, OnDestroy {
       this.model.docType = 'text';
     });
 
-    this.clickSubscriber = this.btnClicksService.saveBtnClick().subscribe(() => {
-      this.dataService.getCurrentEditor().subscribe((res) => {
-        if (res === 'home') {
-         this.documentsAPI.createDocReq({
-            title: this.model.title,
-            content:
-              this.model.content != ''
-                ? this.model.content
-                : '<p>Hello, world!</p>',
-            docType: 'text',
-          }).subscribe();
-          this.model.content = '<p>Hello, world!</p>';
+    this.clickSubscriber = this.btnClicksService
+      .saveBtnClick()
+      .subscribe(() => {
+        if (this.currentURIUnsubscribe) {
+          this.currentURIUnsubscribe.unsubscribe();
         }
+        this.currentURIUnsubscribe = this.dataService
+          .getCurrentEditor()
+          .subscribe((res) => {
+            if (this.createDocUnsubscribe) {
+              this.createDocUnsubscribe.unsubscribe();
+            }
+            if (res === 'home') {
+              this.createDocUnsubscribe = this.documentsAPI
+                .createDocReq({
+                  title: this.model.title,
+                  content:
+                    this.model.content != ''
+                      ? this.model.content
+                      : '<p>Hello, world!</p>',
+                  docType: 'text',
+                })
+                .subscribe();
+              this.model.content = '<p>Hello, world!</p>';
+            }
+          });
       });
-      setTimeout(() => {
-        if(this.clickSubscriber) {
-          this.clickSubscriber.unsubscribe();
-        }
-      }, 600);
-    });
 
     this.documentsAPI.docByIdRes().subscribe((object) => {
       this.setValue(object);
@@ -80,6 +89,12 @@ export class CKEditorComponent implements OnInit, OnDestroy {
     if (this.clickSubscriber) {
       this.clickSubscriber.unsubscribe();
     }
+    if (this.currentURIUnsubscribe) {
+      this.currentURIUnsubscribe.unsubscribe();
+    }
+    if (this.createDocUnsubscribe) {
+      this.createDocUnsubscribe.unsubscribe();
+    }
   }
 
   public onReady(editor: any) {
@@ -94,7 +109,7 @@ export class CKEditorComponent implements OnInit, OnDestroy {
   public onKeyUp(event: KeyboardEvent) {
     event.preventDefault();
 
-    this.socketIoService.listen('updateContent').subscribe((obj: any) => {
+    this.socketIoService.listen('updateContent').subscribe((obj: UpdateDoc) => {
       this.model.content = obj.content;
     });
 
@@ -113,7 +128,7 @@ export class CKEditorComponent implements OnInit, OnDestroy {
       .listen('updateDocument')
       .subscribe((doc: UpdateDoc) => {
         this.socketIoService.emit('updateContent', {
-          id: doc._id,
+          _id: doc._id,
           content: this.model.content,
           docType: 'text',
         });

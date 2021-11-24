@@ -17,7 +17,7 @@ describe('CKEditorComponent', () => {
   let component: CKEditorComponent;
   let fixture: ComponentFixture<CKEditorComponent>;
   let de;
-  let documentsAPIService: any;
+  let documentsAPIService: DocumentsAPIService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -77,7 +77,7 @@ describe('CKEditorComponent', () => {
       _id: '123456789123',
       title: 'test title',
       content: 'test content',
-      docType: 'text'
+      docType: 'text',
     };
 
     component.setValue(fakeDoc);
